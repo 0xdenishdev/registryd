@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"time"
-	events "github.com/gninjava/registryd/eventmanager"
+	manager "github.com/gninjava/registryd/eventmanager"
 )
 
 func main() {
+	sysMonitor := manager.Init()
 	for {
-		events.Listen()
+		manager.Update(sysMonitor)
 		fmt.Println("scanning...")
 		time.Sleep(5 * time.Second)
 	}
