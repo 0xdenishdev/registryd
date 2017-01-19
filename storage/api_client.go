@@ -1,11 +1,12 @@
 package storage
 
 import (
+    "bytes"
     "net/http"
     "io/ioutil"
     "encoding/json"
+
     "github.com/fsouza/go-dockerclient"
-    "bytes"
 )
 
 const (

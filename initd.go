@@ -3,6 +3,7 @@ package main
 import (
     "fmt"
     "time"
+
     manager "github.com/gninjava/registryd/eventmanager"
 )
 

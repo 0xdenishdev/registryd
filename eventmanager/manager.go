@@ -3,6 +3,7 @@ package eventmanager
 import (
     "fmt"
     "strings"
+
     "github.com/fsouza/go-dockerclient"
     "github.com/gninjava/registryd/storage"
 )
