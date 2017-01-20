@@ -1,31 +1,54 @@
 package eventmanager
 
 import (
-	"fmt"
-	"github.com/fsouza/go-dockerclient"
+    "fmt"
+    "strings"
+
+    "github.com/fsouza/go-dockerclient"
+    "github.com/gninjava/registryd/storage"
 )
 
 const (
-	Endpoint = "unix:///var/run/docker.sock"
+    endpoint    = "unix:///var/run/docker.sock"
+    instanceKey = "nginx"
 )
 
-func Listen()  {
-	client, err := docker.NewClient(Endpoint)
-	if err != nil {
-		panic(err)
-	}
+// System Monitor represents each active container in system
+type SysMonitor struct {
+    table     []docker.APIContainers
+    connector *docker.Client
+}
 
-	containers, err := client.ListContainers(docker.ListContainersOptions{All: false})
-	if err != nil {
-		panic(err)
-	}
+// Init serves as monitor initializer that
+// creates the docker client and the empty monitor struct
+func Init() *SysMonitor {
+    apiClient, err := docker.NewClient(endpoint)
+    if err != nil {
+        panic(err)
+    }
 
-	for _, c := range containers {
-		fmt.Println("ID:          ", c.ID)
-		fmt.Println("Image:       ", c.Image)
-		fmt.Println("Created:     ", c.Created)
-		fmt.Println("Ports:       ", c.Ports)
-		fmt.Println("Networks:    ", c.Networks)
-		fmt.Println("Command:     ", c.Command)
-	}
+    containers := make([]docker.APIContainers, 0)
+    return &SysMonitor{containers, apiClient}
+}
+
+// getConnector returns the docker socket connector
+func (monitor *SysMonitor) getConnector() *docker.Client {
+    return monitor.connector
+}
+
+// Update listens containers' events and updates the system monitor
+func Update(monitor *SysMonitor)  {
+    dockerClient := monitor.getConnector()
+
+    containers, err := dockerClient.ListContainers(docker.ListContainersOptions{All: true})
+    if err != nil {
+        panic(err)
+    }
+
+    for _, c := range containers {
+        if (strings.Contains(c.Image, instanceKey)) {
+            status := storage.Save(c)
+            fmt.Println("[INFO] monitor:", status)
+        }
+    }
 }

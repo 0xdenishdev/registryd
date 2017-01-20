@@ -1,16 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"time"
-	events "github.com/gninjava/registryd/eventmanager"
+    "fmt"
+    "time"
+
+    manager "github.com/gninjava/registryd/eventmanager"
 )
 
 func main() {
-	for {
-		events.Listen()
-		fmt.Println("scanning...")
-		time.Sleep(5 * time.Second)
-	}
+    sysMonitor := manager.Init()
+    for {
+        manager.Update(sysMonitor)
+        fmt.Println("scanning...")
+        time.Sleep(5 * time.Second)
+    }
 }
-
