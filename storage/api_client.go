@@ -35,7 +35,7 @@ func Save(data docker.APIContainers) string {
         panic(err)
     }
 
-    resp, nil := http.DefaultClient.Do(req)
+    resp, err := http.DefaultClient.Do(req)
     if err != nil {
         panic(err)
     }
