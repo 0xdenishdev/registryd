@@ -5,7 +5,7 @@ import (
     "strings"
 
     "github.com/fsouza/go-dockerclient"
-    "github.com/gninjava/registryd/storage"
+    "github.com/0xdenishdev/registryd/storage"
 )
 
 const (

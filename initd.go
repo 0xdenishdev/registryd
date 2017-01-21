@@ -4,7 +4,7 @@ import (
     "fmt"
     "time"
 
-    manager "github.com/gninjava/registryd/eventmanager"
+    manager "github.com/0xdenishdev/registryd/eventmanager"
 )
 
 func main() {
